@@ -23,7 +23,7 @@ Starting from the pre-trained model, the network is fine-tuned on the target fie
 
 An early-stopping criterion based on well-log cross-correlation is used to automatically select the best fine-tuning checkpoint.
 
-![Method Overview](docs/overview.png)
+
 
 ---
 
