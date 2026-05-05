@@ -4,7 +4,7 @@ This repository contains the official PyTorch implementation of the paper:
 
 > **Deep Learning-based Seismic Reflectivity Estimation by Pre-training on Labeled Synthetic Data and Physics-guided Fine-tuning in Field Data**
 > Yuting Wang, Jintao Li, Xiaoming Sun, Xinming Wu
-> *Computers & Geosciences*, [Year], DOI: [xxx]
+> *Computers & Geosciences*
 
 ---
 
