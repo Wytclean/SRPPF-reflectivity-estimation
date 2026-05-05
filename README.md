@@ -241,5 +241,5 @@ This project is released under the MIT License. See `LICENSE` for details.
 ## Contact
 
 For questions, please open a GitHub Issue or contact:
-- Yuting Wang: [your email]
+- Yuting Wang: wangyuting051@mail.ustc.edu.cn
 - Xinming Wu: xinmwu@ustc.edu.cn
