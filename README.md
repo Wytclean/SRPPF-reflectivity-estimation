@@ -1,245 +1,286 @@
-# SRPPF: Seismic Reflectivity Estimation by Pre-training and Physics-guided Fine-tuning
+%% 
+%% Copyright 2019 Elsevier Ltd
+%% 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% ! ! ! SUBMISSION CHECKLIST ! ! ! %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Please confirm that your submission follows all the requirements of the guidelines, including the submission checklist:
+%% _ Cover letter
+%% _ Highlights
+%% _ Authorship statement
+%% _ The manuscript must be single column and double spaced
+%% _ Reference must be in the author-date format
+%% _ Code availability section 
+%%
+%% *All the manuscripts in disagreement with the guidelines will be desk-rejected without editorial check.
+%%
+%% --------------------------------------
+%%
+%% This file is part of the 'CAS Bundle'.
+%%  
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in 
+%%    http://www.latex-project.org/lppl.txt 
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%%   
+%% The list of all files belonging to the 'CAS Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for cas-dc documentclass for  
+%% double column output.
+ 
+%\documentclass[a4paper,fleqn,longmktitle]{cas-dc}
+\documentclass[a4paper,fleqn]{cas-sc}
 
-This repository contains the official PyTorch implementation of the paper:
-
-> **Deep Learning-based Seismic Reflectivity Estimation by Pre-training on Labeled Synthetic Data and Physics-guided Fine-tuning in Field Data**
-> Yuting Wang, Jintao Li, Xiaoming Sun, Xinming Wu
-> *Computers & Geosciences*
-
----
-
-## Overview
-
-**SRPPF** is a two-stage deep learning framework for 3D post-stack seismic reflectivity estimation that requires no field-data labels.
-
-**Stage 1 — Supervised Pre-training on Synthetic Data**
-A 3D U-Net is trained on 400 pairs of synthetic seismic data and reflectivity labels. The synthetic data are generated with realistic fold/fault structures, Ricker wavelets (25–75 Hz), and field noise extracted from real surveys. This stage produces a stable, geologically reasonable initial reflectivity estimate.
-
-**Stage 2 — Physics-guided Self-supervised Fine-tuning on Field Data**
-Starting from the pre-trained model, the network is fine-tuned on the target field survey in a self-supervised manner. No reflectivity labels are needed. The fine-tuning is guided by three physics-based constraints:
-- **Data reconstruction loss** — the predicted reflectivity convolved with the wavelet must reproduce the observed seismic data
-- **Sparsity loss** — reflectivity is encouraged to be sparse (L1 penalty)
-- **Structure-oriented smoothness loss** — gradients of the predicted reflectivity are aligned with the 3D local structural tensor (u/v/w eigenvectors), enforcing dip-consistent lateral continuity
-
-An early-stopping criterion based on well-log cross-correlation is used to automatically select the best fine-tuning checkpoint.
+\usepackage[authoryear]{natbib}
+\usepackage{graphicx} 
+\usepackage{float}
+\usepackage{algorithm}  
+\usepackage{algpseudocode}
+\usepackage{color}
+\usepackage{setspace}
+\usepackage[nomarkers,figuresonly]{endfloat}
 
 
+\newcommand{\colorComments}{black} 
+ 
+%%%Author definitions
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM}
+\tsc{QE}
+\tsc{EP}
+\tsc{PMS}
+\tsc{BEC}
+\tsc{DE}
+%%%
 
----
+\usepackage{lineno}
+\linenumbers 
 
-## Repository Structure
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Short title}
+\shortauthors{short author name}
 
-```
-SRPPF-reflectivity-estimation/
-│
-├── train.py                # Fine-tuning script (physics-guided self-supervised)
-├── testset.py              # Inference / prediction script
-│
-├── unet.py                 # 3D U-Net + LNORMALLoss_3D + COSINELoss_3D
-├── unets2wyt.py            # Attention U-Net variant (used in ablation study)
-├── common.py               # ResBlock, BasicBlock shared modules
-│
-├── ssim.py                 # 2D/3D SSIM and MS-SSIM loss implementations
-├── utils.py                # GeoConv (physics convolution), normalization, I/O
-│
-├── ndatagenerator.py       # DataLoader for single-volume field data (fine-tuning)
-├── newndatagenerator.py    # DataLoader with patch cropping + augmentation (pre-training)
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
+\title [mode = title]{Manuscript title - \LaTeX  template for Computers \& Geosciences  }
 
-> **Note on pre-training code:** The supervised pre-training pipeline uses `newndatagenerator.py` for loading synthetic training pairs and the same U-Net architecture in `unet.py`. The fine-tuning pipeline uses `ndatagenerator.py` for single-volume field data loading. The `train.py` script implements the fine-tuning stage.
 
----
+\author[1]{Author 1}[type=editor,
+                        auid=000,bioid=1,orcid=0000-0000-0000-0000]
+\credit{ Author 1 contribution  }
 
-## Pre-trained Model
+\author[2]{Author 2} 
+\credit{Author 2 contribution }
 
-The pre-trained model checkpoint (trained on 400 synthetic 3D volumes of size 256×256×256) is available for download:
+\author[3]{Author 3}
+\credit{Author 3 contribution}
 
-- **Download:** [Google Drive / Zenodo link — add your link here]
-- **File:** `pretrained_unet.pt`
-- Place the downloaded file in the `./model/` directory before running fine-tuning.
+\address[1]{Author 1 affiliation}
+\address[2]{Author 2 affiliation}
+\address[3]{Author 3 affiliation} 
 
----
+\begin{abstract}
+Abstract text here, abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here,  abstract text here.
+\end{abstract}
+ 
+\begin{coverletter}
 
-## Requirements
+Dear Editors-in-Chief,
+\newline
+ 
+please find the enclosed manuscript "..." which we are submitting for exclusive consideration for publication in Computers \& Geosciences. We confirm that the submission follows all the requirements and includes all the items of the submission checklist.  
+\newline
+ 
+The manuscript presents ... 
+\newline
 
-```
-torch>=1.12.0
-numpy>=1.21.0
-matplotlib>=3.4.0
-tensorboard>=2.9.0
-```
+We provide the source codes in a public repository with details listed in the section "Code availability".
+\newline
 
-```bash
-pip install -r requirements.txt
-```
+Thanks for your consideration. 
+\newline
 
-Tested on: Ubuntu 20.04, Python 3.9, CUDA 11.3, NVIDIA A100 GPU.
+Sincerely,
+\newline
 
----
+Authors names
 
-## Input Data Format
+Corresponding author affiliation and e-mail
+\newline
 
-All files are raw binary **float32** (`.dat`) arrays, read with `numpy.fromfile`.
+\textbf{Delete before submission:}
 
-### Fine-tuning inputs (field data)
+Please confirm that your submission follows all the requirements of the guidelines, including the submission checklist:
 
-| File | Shape | Description |
-|------|-------|-------------|
-| Seismic volume | `(n1, n2, n3)` | Observed field seismic data `d_obs` |
-| Wavelet | `(nw,)` | Extracted seismic wavelet (e.g., from Hampson-Russell) |
-| Mask | `(n1, n2, n3)` | Valid-trace mask for correlation evaluation |
-| u1, u2, u3 | `(n1, n2, n3)` each | Dip-direction unit eigenvectors (from structure tensor) |
-| v1, v2, v3 | `(n1, n2, n3)` each | Normal-plane eigenvectors |
-| w1, w2, w3 | `(n1, n2, n3)` each | Strike-direction eigenvectors |
+- Cover letter
 
-> The field datasets used in this paper have dimensions **128 × 128 × 512** (crossline × inline × time samples).
+- Highlights
 
-### Structure tensor computation
-The u/v/w eigenvector volumes can be computed from the input seismic data using the structure-tensor method described in [Wu (2017), Geophysical Journal International]. We used the implementation available in the [Mines JTK](https://github.com/dhale/jtk) library.
+- Authorship statement
 
-### Pre-training inputs (synthetic data)
-400 pairs of 3D synthetic seismic volumes and reflectivity labels at **256 × 256 × 256** resolution.
-Synthetic data generation follows the procedure in [Wu et al. (2020), Geophysics]:
-1. Generate heterogeneous flat-layer impedance models via stochastic simulation
-2. Add fold structures by vertical shearing
-3. Add fault structures using random fault parameters
-4. Compute reflectivity from impedance
-5. Convolve with Ricker wavelets (25–75 Hz, randomly selected)
-6. Add field noise extracted from real surveys
+- The manuscript must be single column and double spaced
 
----
+- Reference must be in the author-date format
 
-## Usage
+- Code availability section 
 
-### Stage 1: Pre-training (supervised, on synthetic data)
+*The manuscripts that do meet the requirement guidelines will be desk-rejected.
 
-Prepare 400 pairs of synthetic seismic and reflectivity volumes as `.dat` files, then run fine-tuning using the pre-training loss (MSE + MS-SSIM + Sparsity on predicted vs. label reflectivity directly). Adjust the loss inputs accordingly in `train.py`.
 
-Pre-training hyperparameters (from the paper):
 
-| Parameter | Value |
-|-----------|-------|
-| Training samples | 400 pairs (256³) |
-| Train / Val / Test split | 80% / 10% / 10% |
-| Optimizer | Adam, lr = 1×10⁻⁴ |
-| LR schedule | ReduceLROnPlateau (factor=0.8, patience=5) |
-| λ1 (MSE weight) | 1 |
-| λ2 (MS-SSIM weight) | 5 |
-| λ3 (Sparsity weight) | 1 |
+\end{coverletter}
 
-### Stage 2: Physics-guided fine-tuning (self-supervised, on field data)
+ 
+\begin{highlights}
+\item Highlight 1
+\item Highlight 2
+\item Highlight 3
+\item Highlight 4
+\item Highlight 5
+\end{highlights}
 
-```bash
-python train.py \
-  --droot  /path/to/seismic.dat \
-  --wroot  /path/to/wavelet.dat \
-  --rroot  /path/to/mask.dat \
-  --u1root /path/to/u1.dat \
-  --u2root /path/to/u2.dat \
-  --u3root /path/to/u3.dat \
-  --v1root /path/to/v1.dat \
-  --v2root /path/to/v2.dat \
-  --v3root /path/to/v3.dat \
-  --w1root /path/to/w1.dat \
-  --w2root /path/to/w2.dat \
-  --w3root /path/to/w3.dat \
-  --n1 128 --n2 128 --n3 512 \
-  --epochs 1000 --lr 1e-4 \
-  --resume ./model/pretrained_unet.pt \
-  --pred_dir ./predict_reflection \
-  --recov_dir ./recon_seismic
-```
+\begin{keywords}
+Keyword 1 \sep Keyword 2 \sep Keyword 3 \sep Keyword 4
+\end{keywords}
 
-Monitor with TensorBoard:
-```bash
-tensorboard --logdir=.
-```
+\maketitle 
 
-Fine-tuning hyperparameters (from the paper):
+\printcredits
 
-| Parameter | Value |
-|-----------|-------|
-| Optimizer | Adam, lr = 1×10⁻⁴ |
-| α1 (MSE weight) | 1 |
-| α2 (MS-SSIM weight) | 5 |
-| α3 (Sparsity weight) | 0.005 |
-| α4 (Structure loss weight) | 1 |
-| Early stopping | Well-log cross-correlation peak |
+\doublespacing
 
-### Inference
 
-```bash
-python testset.py \
-  --data_path  /path/to/seismic.dat \
-  --model_path ./model/model_best.pt \
-  --out_path   ./output/prediction.dat \
-  --n1 128 --n2 128 --n3 512
-```
+\section{Introduction}
+\label{intro}
 
----
 
-## Loss Functions
 
-### Pre-training loss
-```
-L_pretrain = λ1·MSE(r̂, r) + λ2·(1 − MS-SSIM(r̂, r)) + λ3·mean(|r̂|)
-```
-where `r̂` is the predicted reflectivity and `r` is the ground-truth reflectivity label.
+Examples of citations:
 
-### Fine-tuning loss
-```
-L_finetune = α1·MSE(d_recons, d_obs) + α2·(1 − MS-SSIM(d_recons, d_obs))
-           + α3·mean(|r|) + α4·L_str
-```
-where `d_recons = w * r` is the reconstructed seismic (convolution of predicted reflectivity with wavelet), and:
-```
-L_str(u)   = cos(∇r, u)          # dip alignment loss
-L_str(v,w) = mean(|∇r·v| + |∇r·w|)  # normal-plane smoothness loss
-```
+\cite{gomez1990isim3d, pebesma2004multivariable, hansen2018multiple}
 
----
+Examples of citations in parentheses: 
 
-## Results
+\citep{gomez1990isim3d, pebesma2004multivariable, hansen2018multiple}
 
-| Method | Correlation (clean) | MSE (clean) | Correlation (SNR=11dB) | Correlation (SNR=5dB) |
-|--------|--------------------:|------------:|-----------------------:|----------------------:|
-| Only pre-trained | 0.8453 | 0.0052 | 0.8303 | 0.7959 |
-| Only self-supervised | 0.8012 | 0.0098 | 0.5292 | 0.4504 |
-| **SRPPF (ours)** | **0.9832** | **0.0006** | **0.9302** | **0.9010** |
+\section{Methodology}
 
-*Evaluated on 2D Marmousi synthetic data.*
+This section includes an example of equation. 
+ 
+\begin{equation}
+\label{eqn:linear}
+    y=ax+b.
+\end{equation}
 
----
 
-## Citation
+\subsection{Subsection}
 
-If you use this code in your research, please cite:
+This section contains another example of equation, different from Eq.  \ref{eqn:linear}.
 
-```bibtex
-@article{wang2025srppf,
-  title   = {Deep Learning-based Seismic Reflectivity Estimation by Pre-training on
-             Labeled Synthetic Data and Physics-guided Fine-tuning in Field Data},
-  author  = {Wang, Yuting and Li, Jintao and Sun, Xiaoming and Wu, Xinming},
-  journal = {Computers \& Geosciences},
-  year    = {2025},
-  doi     = {xxx}
-}
-```
+\begin{equation} 
+\label{eqn:quadratic}
+    y=ax^2+bx+c
+\end{equation}
 
----
+\section{Algorithm and implementation}
 
-## License
+Example of algorithm:
+\begin{algorithm}
+  \caption{Algorithm example }
+  
+  \begin{algorithmic}
+  \label{alg:Alg1}
+  \State \textbf{Input:} ...
+   \newline
 
-This project is released under the MIT License. See `LICENSE` for details.
+ \Statex \textit{1.} Step1
+  \Statex \textit{2.} Step2;
+ \State \textit{3.}  Step3;
+  \newline
+   \For{ i = 1,..., m}
+   \State \textit{4.} Step 4;
+    \For{ j = 2,..., n} 
+   \State \textit{5.}  Step 5;
+   \State \textit{6.} Step 6;
+   \EndFor
+  \EndFor 
+  \newline
+\State  \textbf{Output: } ... 
+  \end{algorithmic} 
+\end{algorithm} 
 
----
 
-## Contact
+\section{Results}
 
-For questions, please open a GitHub Issue or contact:
-- Yuting Wang: wangyuting051@mail.ustc.edu.cn
-- Xinming Wu: xinmwu@ustc.edu.cn
+
+This section includes an example of figure (Figure \ref{fig:Figure1}), from  \cite{de2021direct}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{figs_rev1/uncond_distribution_reference.png}
+\caption{ Caption here. Image from \cite{de2021direct}.}
+\label{fig:Figure1}
+\end{figure}
+
+This section includes an example of table (Table \ref{tab:Table1}).
+
+\begin{table}
+\centering
+\caption{Example of table.}
+\label{tab:Table1}
+\begin{tabular}{ |c||c|c|c|} 
+ \hline
+     & $a$  &  $b$  &  $c$\\ 
+ \hline 
+ \hline
+$a$ & 0.014 &  0.20    &   0.13  \\
+\hline
+$b$ & 0.20    &   0.17    &   2.46    \\
+\hline
+$c$ & 0.13    &   2.5     &   0.31   \\
+\hline
+\end{tabular} 
+\end{table}
+
+
+\subsection{Subsection}
+
+Text ...
+
+\section{Conclusions}
+
+Conclusions here...
+
+\section{Acknowledgments}
+
+The authors would like to acknowledge ...
+
+\newpage
+
+\textbf{Code availability section}
+
+Name of the code/library
+
+Contact: e-mail and phone number
+
+Hardware requirements: ...
+
+Program language: ...
+ 
+Software required: ...
+
+Program size: ...
+
+The source codes are available for downloading at the link:
+https://github.com/ . . . . 
+
+
+\bibliographystyle{cas-model2-names}
+\bibliography{bibliography} 
+
+\end{document}
+
