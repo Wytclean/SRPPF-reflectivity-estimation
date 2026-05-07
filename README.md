@@ -66,7 +66,7 @@ tensorboard>=2.9.0
 pip install -r requirements.txt
 ```
 
-Tested on: Ubuntu 20.04, Python 3.9, CUDA 11.3, NVIDIA A100 GPU.
+Tested on: Ubuntu 20.04, Python 3.9, CUDA 11.3, NVIDIA V100 GPU.
 
 ---
 
