@@ -264,4 +264,3 @@ Released under the MIT License. See `LICENSE` for details.
 ## Contact
 
 - Yuting Wang: wangyuting051@mail.ustc.edu.cn
-- Xinming Wu: xinmwu@ustc.edu.cn
